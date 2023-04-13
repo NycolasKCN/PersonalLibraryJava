@@ -1,11 +1,9 @@
 package nycdev.frames;
 
-import nycdev.SistemaLivro;
+import nycdev.controllers.PersonalLibrarySystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -16,10 +14,10 @@ public class PersonalLibrary {
     JLabel title, image;
     ImageIcon reiImg = new ImageIcon("src/main/resources/assets/reiImg.png");
 
-    SistemaLivro sistema;
+    PersonalLibrarySystem sistema;
 
     public PersonalLibrary() {
-        sistema = new SistemaLivro();
+        sistema = new PersonalLibrarySystem();
         cadastraFrame = new CadastrarLivroFrame(sistema);
 
         configMenuBar();
@@ -38,7 +36,7 @@ public class PersonalLibrary {
         JMenu pesquisaMenu = new JMenu("Pesquisar");
         JMenuItem pesquisaLivro = new JMenuItem("Pesquisar livro");
         pesquisaLivro.addActionListener(e -> {
-            System.out.println(sistema.getLivros());
+            System.out.println(sistema.getBooks());
         });
         pesquisaMenu.add(pesquisaLivro);
 

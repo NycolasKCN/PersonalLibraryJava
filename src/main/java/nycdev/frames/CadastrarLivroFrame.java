@@ -1,6 +1,6 @@
 package nycdev.frames;
 
-import nycdev.SistemaLivro;
+import nycdev.controllers.PersonalLibrarySystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +12,8 @@ public class CadastrarLivroFrame extends JFrame{
     JTextField nomeIn, autorIn, numPagIn;
     JButton salvarButton, cancelarButton;
 
-    SistemaLivro sis;
-    public CadastrarLivroFrame(SistemaLivro sis) {
+    PersonalLibrarySystem sis;
+    public CadastrarLivroFrame(PersonalLibrarySystem sis) {
         this.sis = sis;
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setAll();
@@ -57,14 +57,13 @@ public class CadastrarLivroFrame extends JFrame{
 
     private void setButtons() {
         salvarButton = new JButton("Salvar");
-        salvarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        salvarButton.addActionListener(e -> {
                 String nomeLivro = nomeIn.getText();
                 String nomeAutor = autorIn.getText();
                 String numPag = numPagIn.getText();
                 sis.cadastraLivro(nomeLivro, nomeAutor, numPag);
-            }
+                JOptionPane.showMessageDialog(this, "Livro cadastrado com sucesso!");
+                this.dispose();
         });
         cancelarButton = new JButton("Cancelar");
         cancelarButton.addActionListener(new ActionListener() {
@@ -76,7 +75,7 @@ public class CadastrarLivroFrame extends JFrame{
     }
 
     public static void main(String[] args) {
-        SistemaLivro s = new SistemaLivro();
+        PersonalLibrarySystem s = new PersonalLibrarySystem();
         JFrame j = new CadastrarLivroFrame(s);
         j.setVisible(true);
         j.setDefaultCloseOperation(EXIT_ON_CLOSE);
