@@ -45,7 +45,7 @@ public class CadastrarLivroFrame extends JFrame{
         nome.setFont(new Font("Noto Sans", Font.PLAIN, 14));
         autor = new JLabel("Autor: ", JLabel.CENTER);
         autor.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        numPag = new JLabel("Números de páginas: ", JLabel.CENTER);
+        numPag = new JLabel("Número de páginas: ", JLabel.CENTER);
         numPag.setFont(new Font("Noto Sans", Font.PLAIN, 14));
     }
 

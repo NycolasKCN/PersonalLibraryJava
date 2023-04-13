@@ -11,10 +11,14 @@ import java.util.List;
 public class SistemaLivro {
     private List<Livro> livros;
     private List<Usuario> users;
-    private DataBase db = new DataBase();
+    private final DataBase db = new DataBase();
 
     public SistemaLivro() {
-        this.livros = new ArrayList<>();
+        try {
+            this.livros = db.leLivros();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.users = new ArrayList<>();
     }
 
