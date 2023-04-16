@@ -12,14 +12,62 @@ public class RegisterBookFrame {
     JButton saveBt, cancelBt;
     PersonalLibrarySystem sys;
 
+    ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_add_circle_outline_black_48dp.png");
+
     public RegisterBookFrame(JFrame parent, PersonalLibrarySystem sys) {
         this.sys = sys;
         this.parent = parent;
         configFrame();
-        configLabels();
-        configFields();
-        configButtons();
+        configComponents();
+        configLayout();
+    }
 
+    private void configFrame() {
+        frame = new JFrame("Cadastrar livro");
+        frame.setIconImage(icon.getImage());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(400, 200);
+        frame.setResizable(false);
+        frame.setBackground(Color.lightGray);
+        frame.setLocation(getPosition());
+    }
+
+    private void configComponents() {
+        titleLabel = new JLabel("Nome: ", JLabel.CENTER);
+        titleLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+        authorLabel = new JLabel("Autor: ", JLabel.CENTER);
+        authorLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+        pageLabel = new JLabel("Número de páginas: ", JLabel.CENTER);
+        pageLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+
+        titleTF = new JTextField();
+        authorTF = new JTextField();
+        numPagIn = new JTextField();
+
+        saveBt = new JButton("Salvar");
+        saveBt.addActionListener(e -> {
+            String titleBook = titleTF.getText();
+            String authorName = authorTF.getText();
+            String pages = numPagIn.getText();
+            boolean confirm = sys.addBook(titleBook, authorName, pages);
+            if (confirm) {
+                JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Livro já está cadastrado!");
+            }
+            frame.dispose();
+        });
+        cancelBt = new JButton("Cancelar");
+        cancelBt.addActionListener(e -> {
+            frame.dispose();
+        });
+    }
+
+    private void configLayout() {
+        GridLayout frameLayout = new GridLayout(4, 2);
+        frameLayout.setVgap(10);
+        frameLayout.setHgap(5);
+        frame.setLayout(frameLayout);
         frame.add(titleLabel);
         frame.add(titleTF);
         frame.add(authorLabel);
@@ -30,49 +78,6 @@ public class RegisterBookFrame {
         frame.add(saveBt);
     }
 
-    private void configFrame() {
-        frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setTitle("Cadastrar livro");
-        frame.setSize(400, 200);
-        frame.setResizable(false);
-        frame.setBackground(Color.lightGray);
-        frame.getContentPane().setLayout(new GridLayout(4, 2));
-        Point pos = getMidOfParent();
-        frame.setLocation(pos);
-    }
-
-    private void configLabels() {
-        titleLabel = new JLabel("Nome: ", JLabel.CENTER);
-        titleLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        authorLabel = new JLabel("Autor: ", JLabel.CENTER);
-        authorLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        pageLabel = new JLabel("Número de páginas: ", JLabel.CENTER);
-        pageLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-    }
-
-    private void configFields() {
-        titleTF = new JTextField();
-        authorTF = new JTextField();
-        numPagIn = new JTextField();
-    }
-
-    private void configButtons() {
-        saveBt = new JButton("Salvar");
-        saveBt.addActionListener(e -> {
-            String titleBook = titleTF.getText();
-            String authorName = authorTF.getText();
-            String pages = numPagIn.getText();
-            sys.addBook(titleBook, authorName, pages);
-            JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
-            frame.dispose();
-        });
-        cancelBt = new JButton("Cancelar");
-        cancelBt.addActionListener(e -> {
-            frame.dispose();
-        });
-    }
-
     private Point getParentLocation() {
         if (this.parent == null) {
             return new Point(0, 0);
@@ -80,7 +85,7 @@ public class RegisterBookFrame {
         return this.parent.getLocationOnScreen();
     }
 
-    private Point getMidOfParent() {
+    private Point getPosition() {
         Point posParent = getParentLocation();
         Dimension sizeParent = parent.getSize();
         Dimension sizeThis = frame.getSize();

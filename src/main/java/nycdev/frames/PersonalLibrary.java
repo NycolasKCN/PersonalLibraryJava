@@ -10,18 +10,22 @@ import java.awt.event.WindowEvent;
 public class PersonalLibrary {
     JFrame mainFrame;
     RegisterBookFrame registerFrame;
-    BookResearchFrame researchFrame;
+    SearchBookFrame researchFrame;
+    RemoveBookFrame removeFrame;
     JMenuBar menuBar = new JMenuBar();
     JLabel title, image;
-    ImageIcon reiImg = new ImageIcon("src/main/resources/assets/reiImg.png");
+    ImageIcon reiImg = new ImageIcon("src/main/resources/assets/rei with books.png");
+    ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_library_books_black_48dp.png");
 
     PersonalLibrarySystem personalLibrarySys;
 
     public PersonalLibrary() {
         personalLibrarySys = new PersonalLibrarySystem();
-        configMenuBar();
-        configLabels();
         configFrame();
+        configMenuBar();
+        configComponents();
+        configFrame();
+        configLayout();
     }
 
     private void configMenuBar() {
@@ -36,13 +40,17 @@ public class PersonalLibrary {
         JMenu researchMenu = new JMenu("Pesquisar");
         JMenuItem researchBookItem = new JMenuItem("Pesquisar livro");
         researchBookItem.addActionListener(e -> {
-            researchFrame = new BookResearchFrame(mainFrame, personalLibrarySys);
+            researchFrame = new SearchBookFrame(mainFrame, personalLibrarySys);
             researchFrame.setVisible(true);
         });
         researchMenu.add(researchBookItem);
 
         JMenu removeMenu = new JMenu("Excluir");
         JMenuItem removeBookItem = new JMenuItem("Excluir livro");
+        removeBookItem.addActionListener(e -> {
+            removeFrame = new RemoveBookFrame(mainFrame, personalLibrarySys);
+            removeFrame.setVisible(true);
+        });
         removeMenu.add(removeBookItem);
 
         JMenu salveMenu = new JMenu("Salvar");
@@ -59,14 +67,8 @@ public class PersonalLibrary {
         menuBar.add(salveMenu);
     }
 
-    private void configLabels() {
-        title = new JLabel("Bem vindo!!", JLabel.CENTER);
-        title.setFont(new Font("serif", Font.BOLD, 28));
-        image = new JLabel(reiImg, JLabel.CENTER);
-    }
-
     private void configFrame() {
-        mainFrame = new JFrame();
+        mainFrame = new JFrame("PersonalLibrary");
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -78,13 +80,22 @@ public class PersonalLibrary {
                 }
             }
         });
-
+        mainFrame.setIconImage(icon.getImage());
         mainFrame.setBackground(Color.lightGray);
         mainFrame.setLocation(300, 50);
         mainFrame.setResizable(false);
         mainFrame.setSize(800, 600);
-        mainFrame.setTitle("PersonalLibrary");
         mainFrame.setJMenuBar(menuBar);
+    }
+
+
+    private void configComponents() {
+        title = new JLabel("Bem vindo!!", JLabel.CENTER);
+        title.setFont(new Font("Noto sans", Font.BOLD, 28));
+        image = new JLabel(reiImg, JLabel.CENTER);
+    }
+
+    private void configLayout() {
         mainFrame.setLayout(new GridLayout(1, 2));
         mainFrame.add(title);
         mainFrame.add(image);

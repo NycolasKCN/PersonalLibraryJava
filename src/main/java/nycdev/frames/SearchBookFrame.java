@@ -8,10 +8,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-public class BookResearchFrame {
+public class SearchBookFrame {
     private final PersonalLibrarySystem sys;
     private final JFrame parent;
-    String[] collumns = {"Título", "Autor", "Número de páginas"};
+    String[] collumns = {"id", "Título", "Autor", "Número de páginas"};
     String[][] resultado;
     JTextField query;
     JCheckBox nameCB, authorCB;
@@ -21,7 +21,9 @@ public class BookResearchFrame {
     DefaultTableModel tableModel = new DefaultTableModel();
     JScrollPane scrollPane;
 
-    public BookResearchFrame(JFrame parent, PersonalLibrarySystem sys) {
+    ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_search_black_48dp.png");
+
+    public SearchBookFrame(JFrame parent, PersonalLibrarySystem sys) {
         this.parent = parent;
         this.sys = sys;
 
@@ -31,32 +33,12 @@ public class BookResearchFrame {
     }
 
     private void configFrame() {
-        frame = new JFrame();
+        frame = new JFrame("Pesquisar livros");
+        frame.setIconImage(icon.getImage());
         frame.setBackground(Color.lightGray);
         frame.setResizable(false);
         frame.setSize(600, 400);
-        frame.setTitle("Pesquisar");
-        Point pos = getMidOfParent();
-        frame.setLocation(pos);
-    }
-
-    private void configLayout() {
-        JPanel inputText = new JPanel();
-        inputText.setLayout(new GridLayout(3, 1));
-        inputText.setBounds(0, 0, 600, 150);
-        inputText.add(query);
-        inputText.add(nameCB);
-        inputText.add(authorCB);
-
-        scrollPane = new JScrollPane(tableResult);
-
-        BorderLayout layout = new BorderLayout();
-        layout.setHgap(10);
-        layout.setVgap(10);
-        frame.setLayout(layout);
-        frame.add(inputText, BorderLayout.NORTH);
-        frame.add(scrollPane, BorderLayout.CENTER);
-        frame.add(pesquisarBt, BorderLayout.AFTER_LAST_LINE);
+        frame.setLocation(getPosition());
     }
 
     private void configComponents() {
@@ -70,6 +52,24 @@ public class BookResearchFrame {
             pesquisar();
         });
         tableResult = new JTable();
+    }
+
+    private void configLayout() {
+        JPanel inputText = new JPanel();
+        inputText.setLayout(new GridLayout(3, 1));
+        inputText.setBounds(0, 0, 600, 150);
+        inputText.add(query);
+        inputText.add(nameCB);
+        inputText.add(authorCB);
+
+        scrollPane = new JScrollPane(tableResult);
+
+        BorderLayout layout = new BorderLayout();
+        layout.setVgap(10);
+        frame.setLayout(layout);
+        frame.add(inputText, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(pesquisarBt, BorderLayout.AFTER_LAST_LINE);
     }
 
     private void pesquisar() {
@@ -89,19 +89,32 @@ public class BookResearchFrame {
             return;
         }
         tableModel = new DefaultTableModel(resultado, collumns);
-        tableResult.setModel(tableModel);
+        SearchBookFrame.configTableModel(tableResult, tableModel);
     }
 
-    private String[][] populateVector(List<Book> list) {
-        String[][] r = new String[list.size()][3];
+    public static void configTableModel(JTable table, DefaultTableModel model) {
+        table.setModel(model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        table.getColumnModel().getColumn(0).setResizable(false);
+        table.getColumnModel().getColumn(1).setPreferredWidth(254);
+        table.getColumnModel().getColumn(1).setResizable(false);
+        table.getColumnModel().getColumn(2).setPreferredWidth(150);
+        table.getColumnModel().getColumn(2).setResizable(false);
+        table.getColumnModel().getColumn(3).setPreferredWidth(130);
+        table.getColumnModel().getColumn(3).setResizable(false);
+    }
+
+    public static String[][] populateVector(List<Book> list) {
+        String[][] r = new String[list.size()][4];
         for (int i = 0; i < list.size(); i++) {
             Book b = list.get(i);
-            r[i][0] = b.getName();
-            r[i][1] = b.getAuthor();
+            r[i][0] = "" + (i + 1)  ;
+            r[i][1] = b.getName();
+            r[i][2] = b.getAuthor();
             if (b.getPages() == null) {
-                r[i][2] = " ";
+                r[i][3] = " ";
             } else {
-                r[i][2] = b.getPages();
+                r[i][3] = b.getPages();
             }
         }
         return r;
@@ -114,7 +127,7 @@ public class BookResearchFrame {
         return this.parent.getLocationOnScreen();
     }
 
-    private Point getMidOfParent() {
+    private Point getPosition() {
         Point posParent = getParentLocation();
         Dimension sizeParent = parent.getSize();
         Dimension sizeThis = frame.getSize();

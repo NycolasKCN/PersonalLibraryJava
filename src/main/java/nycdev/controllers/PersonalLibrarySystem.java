@@ -1,8 +1,12 @@
 package nycdev.controllers;
 
 import nycdev.database.DataBase;
+import nycdev.frames.PersonalLibrary;
 import nycdev.models.Book;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +41,16 @@ public class PersonalLibrarySystem {
         return false;
     }
 
-    public boolean removeBook(String title, String author, String pages) {
-        return books.remove(new Book(title, author, pages));
+    public boolean addBook(Book book) {
+        if (!hasBook(book)) {
+            this.books.add(book);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeBook(String title, String author) {
+        return books.remove(new Book(title, author, " "));
     }
 
     public boolean removeBook(Book book) {
@@ -77,4 +89,25 @@ public class PersonalLibrarySystem {
         }
     }
 
+    private static void populateDataBase(PersonalLibrarySystem sys) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/db/livros.txt"))){
+            String linha;
+            while ((linha = br.readLine()) != null) { // lê cada linha do arquivo
+                String[] dadosLivro = linha.split(","); // divide a linha em três partes: título, autor e páginas
+                String titulo = dadosLivro[0].trim();
+                String autor = dadosLivro[1].trim();
+                String paginas = dadosLivro[2].trim();
+
+                sys.addBook(new Book(titulo, autor, paginas));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        PersonalLibrarySystem sys = new PersonalLibrarySystem();
+        PersonalLibrarySystem.populateDataBase(sys);
+        sys.saveBooks();
+    }
 }
