@@ -21,7 +21,8 @@ public class DataBase {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(pathBooks))) {
             return (ArrayList<Book>) in.readObject();
         } catch (FileNotFoundException e) {
-            throw new IOException("Arquivo 'Livros.dat' não foi encontrado.");
+            writeBooks(new ArrayList<Book>());
+            return readBooks();
         } catch (ClassNotFoundException e) {
             throw new IOException("Classe dos objetos gravados não existe.");
         }

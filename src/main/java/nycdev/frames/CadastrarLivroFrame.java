@@ -8,13 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CadastrarLivroFrame extends JFrame{
+    JFrame parent;
     JLabel nome, autor, numPag;
     JTextField nomeIn, autorIn, numPagIn;
     JButton salvarButton, cancelarButton;
 
     PersonalLibrarySystem sis;
-    public CadastrarLivroFrame(PersonalLibrarySystem sis) {
+    public CadastrarLivroFrame(JFrame parent, PersonalLibrarySystem sis) {
         this.sis = sis;
+        this.parent = parent;
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setAll();
         setLabels();
@@ -37,7 +39,9 @@ public class CadastrarLivroFrame extends JFrame{
         setResizable(false);
         setBackground(Color.lightGray);
         getContentPane().setLayout(new GridLayout(4,2));
-        setLocation(330, 80);
+
+        Point pos = getMidOfParent();
+        setLocation(pos);
     }
 
     private void setLabels() {
@@ -66,17 +70,30 @@ public class CadastrarLivroFrame extends JFrame{
                 this.dispose();
         });
         cancelarButton = new JButton("Cancelar");
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CadastrarLivroFrame.super.dispose();
-            }
+        cancelarButton.addActionListener(e -> {
+            this.dispose();
         });
+    }
+
+    private Point getParentLocation() {
+        if (this.parent == null) {
+            return new Point(0,0);
+        }
+        return this.parent.getLocationOnScreen();
+    }
+
+    private Point getMidOfParent() {
+        Point posParent = getParentLocation();
+        Dimension sizeParent = parent.getSize();
+        Dimension sizeThis = getSize();
+        int x = (int) (posParent.getX() + (sizeParent.getWidth() / 2) - (sizeThis.getWidth() / 2));
+        int y = (int) (posParent.getY() + (sizeParent.getHeight() / 2) - (sizeThis.getHeight() / 2));
+        return new Point(x, y);
     }
 
     public static void main(String[] args) {
         PersonalLibrarySystem s = new PersonalLibrarySystem();
-        JFrame j = new CadastrarLivroFrame(s);
+        JFrame j = new CadastrarLivroFrame(null , s);
         j.setVisible(true);
         j.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }

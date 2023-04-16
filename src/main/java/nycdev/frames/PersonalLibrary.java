@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 public class PersonalLibrary {
     JFrame mainFrame;
     JFrame cadastraFrame;
+    PesquisaLivroFrame pesquisaFrame;
     JMenuBar menuBar = new JMenuBar();
     JLabel title, image;
     ImageIcon reiImg = new ImageIcon("src/main/resources/assets/reiImg.png");
@@ -18,8 +19,6 @@ public class PersonalLibrary {
 
     public PersonalLibrary() {
         sistema = new PersonalLibrarySystem();
-        cadastraFrame = new CadastrarLivroFrame(sistema);
-
         configMenuBar();
         configLabels();
         configFrame();
@@ -29,6 +28,7 @@ public class PersonalLibrary {
         JMenu cadastrarMenu = new JMenu("Cadastrar");
         JMenuItem cadastraLivro = new JMenuItem("Cadastar novo livro");
         cadastraLivro.addActionListener(e -> {
+            cadastraFrame = new CadastrarLivroFrame(mainFrame, sistema);
             cadastraFrame.setVisible(true);
         });
         cadastrarMenu.add(cadastraLivro);
@@ -36,6 +36,8 @@ public class PersonalLibrary {
         JMenu pesquisaMenu = new JMenu("Pesquisar");
         JMenuItem pesquisaLivro = new JMenuItem("Pesquisar livro");
         pesquisaLivro.addActionListener(e -> {
+            pesquisaFrame = new PesquisaLivroFrame(mainFrame, sistema);
+            pesquisaFrame.setVisible(true);
             System.out.println(sistema.getBooks());
         });
         pesquisaMenu.add(pesquisaLivro);
@@ -59,7 +61,7 @@ public class PersonalLibrary {
     }
 
     private void configLabels() {
-        title = new JLabel("Bem vindo, User", JLabel.CENTER);
+        title = new JLabel("Bem vindo!!", JLabel.CENTER);
         title.setFont(new Font("serif", Font.BOLD, 28));
         image = new JLabel(reiImg, JLabel.CENTER);
     }
