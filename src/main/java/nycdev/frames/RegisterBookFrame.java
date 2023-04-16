@@ -5,6 +5,9 @@ import nycdev.controllers.PersonalLibrarySystem;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class RegisterBookFrame {
     JFrame frame, parent;
     JLabel titleLabel, authorLabel, pageLabel;

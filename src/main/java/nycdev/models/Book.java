@@ -3,6 +3,9 @@ package nycdev.models;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class Book implements Serializable {
     private String title;
     private String author;

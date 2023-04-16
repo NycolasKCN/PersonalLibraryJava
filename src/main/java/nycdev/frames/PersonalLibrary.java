@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class PersonalLibrary {
     JFrame mainFrame;
     RegisterBookFrame registerFrame;

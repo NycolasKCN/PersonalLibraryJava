@@ -1,16 +1,17 @@
 package nycdev.controllers;
 
 import nycdev.database.DataBase;
-import nycdev.frames.PersonalLibrary;
 import nycdev.models.Book;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class PersonalLibrarySystem {
     private final List<Book> books;
     private final DataBase db = new DataBase();

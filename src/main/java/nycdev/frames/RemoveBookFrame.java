@@ -6,12 +6,14 @@ import nycdev.models.Book;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-
 import java.util.List;
 
 import static nycdev.frames.SearchBookFrame.configTableModel;
 import static nycdev.frames.SearchBookFrame.populateVector;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class RemoveBookFrame {
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_delete_black_48dp.png");
     PersonalLibrarySystem sys;
@@ -21,9 +23,9 @@ public class RemoveBookFrame {
     JButton removeBt;
     JTable table;
     DefaultTableModel tableModel;
-    String[] columns = {"id","Título", "Autor", "Número de páginas"};
+    String[] columns = {"id", "Título", "Autor", "Número de páginas"};
 
-    public RemoveBookFrame(JFrame parent, PersonalLibrarySystem sys){
+    public RemoveBookFrame(JFrame parent, PersonalLibrarySystem sys) {
         this.parent = parent;
         this.sys = sys;
         configFrame();
@@ -68,10 +70,10 @@ public class RemoveBookFrame {
     }
 
     public void configLayout() {
-        GridLayout panelLayout = new GridLayout(2,2);
+        GridLayout panelLayout = new GridLayout(2, 2);
         panelLayout.setVgap(6);
         JPanel inputPanel = new JPanel(panelLayout);
-        inputPanel.setBounds(0,5, 600, 200);
+        inputPanel.setBounds(0, 5, 600, 200);
         inputPanel.add(titleLabel);
         inputPanel.add(titleTF);
         inputPanel.add(authorLabel);

@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class SearchBookFrame {
     private final PersonalLibrarySystem sys;
     private final JFrame parent;
@@ -30,6 +33,34 @@ public class SearchBookFrame {
         configFrame();
         configComponents();
         configLayout();
+    }
+
+    public static void configTableModel(JTable table, DefaultTableModel model) {
+        table.setModel(model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        table.getColumnModel().getColumn(0).setResizable(false);
+        table.getColumnModel().getColumn(1).setPreferredWidth(254);
+        table.getColumnModel().getColumn(1).setResizable(false);
+        table.getColumnModel().getColumn(2).setPreferredWidth(150);
+        table.getColumnModel().getColumn(2).setResizable(false);
+        table.getColumnModel().getColumn(3).setPreferredWidth(130);
+        table.getColumnModel().getColumn(3).setResizable(false);
+    }
+
+    public static String[][] populateVector(List<Book> list) {
+        String[][] r = new String[list.size()][4];
+        for (int i = 0; i < list.size(); i++) {
+            Book b = list.get(i);
+            r[i][0] = "" + (i + 1);
+            r[i][1] = b.getName();
+            r[i][2] = b.getAuthor();
+            if (b.getPages() == null) {
+                r[i][3] = " ";
+            } else {
+                r[i][3] = b.getPages();
+            }
+        }
+        return r;
     }
 
     private void configFrame() {
@@ -90,34 +121,6 @@ public class SearchBookFrame {
         }
         tableModel = new DefaultTableModel(resultado, collumns);
         SearchBookFrame.configTableModel(tableResult, tableModel);
-    }
-
-    public static void configTableModel(JTable table, DefaultTableModel model) {
-        table.setModel(model);
-        table.getColumnModel().getColumn(0).setPreferredWidth(30);
-        table.getColumnModel().getColumn(0).setResizable(false);
-        table.getColumnModel().getColumn(1).setPreferredWidth(254);
-        table.getColumnModel().getColumn(1).setResizable(false);
-        table.getColumnModel().getColumn(2).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setResizable(false);
-        table.getColumnModel().getColumn(3).setPreferredWidth(130);
-        table.getColumnModel().getColumn(3).setResizable(false);
-    }
-
-    public static String[][] populateVector(List<Book> list) {
-        String[][] r = new String[list.size()][4];
-        for (int i = 0; i < list.size(); i++) {
-            Book b = list.get(i);
-            r[i][0] = "" + (i + 1)  ;
-            r[i][1] = b.getName();
-            r[i][2] = b.getAuthor();
-            if (b.getPages() == null) {
-                r[i][3] = " ";
-            } else {
-                r[i][3] = b.getPages();
-            }
-        }
-        return r;
     }
 
     private Point getParentLocation() {

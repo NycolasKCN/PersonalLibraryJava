@@ -6,6 +6,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Nycolas Kevin
+ */
 public class DataBase {
     private static final String pathBooks = "src/main/resources/db/livros.dat";
 
