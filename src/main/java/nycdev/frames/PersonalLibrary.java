@@ -9,55 +9,54 @@ import java.awt.event.WindowEvent;
 
 public class PersonalLibrary {
     JFrame mainFrame;
-    JFrame cadastraFrame;
-    PesquisaLivroFrame pesquisaFrame;
+    RegisterBookFrame registerFrame;
+    BookResearchFrame researchFrame;
     JMenuBar menuBar = new JMenuBar();
     JLabel title, image;
     ImageIcon reiImg = new ImageIcon("src/main/resources/assets/reiImg.png");
 
-    PersonalLibrarySystem sistema;
+    PersonalLibrarySystem personalLibrarySys;
 
     public PersonalLibrary() {
-        sistema = new PersonalLibrarySystem();
+        personalLibrarySys = new PersonalLibrarySystem();
         configMenuBar();
         configLabels();
         configFrame();
     }
 
     private void configMenuBar() {
-        JMenu cadastrarMenu = new JMenu("Cadastrar");
-        JMenuItem cadastraLivro = new JMenuItem("Cadastar novo livro");
-        cadastraLivro.addActionListener(e -> {
-            cadastraFrame = new CadastrarLivroFrame(mainFrame, sistema);
-            cadastraFrame.setVisible(true);
+        JMenu registerMenu = new JMenu("Cadastrar");
+        JMenuItem registerBookItem = new JMenuItem("Cadastar novo livro");
+        registerBookItem.addActionListener(e -> {
+            registerFrame = new RegisterBookFrame(mainFrame, personalLibrarySys);
+            registerFrame.setVisible(true);
         });
-        cadastrarMenu.add(cadastraLivro);
+        registerMenu.add(registerBookItem);
 
-        JMenu pesquisaMenu = new JMenu("Pesquisar");
-        JMenuItem pesquisaLivro = new JMenuItem("Pesquisar livro");
-        pesquisaLivro.addActionListener(e -> {
-            pesquisaFrame = new PesquisaLivroFrame(mainFrame, sistema);
-            pesquisaFrame.setVisible(true);
-            System.out.println(sistema.getBooks());
+        JMenu researchMenu = new JMenu("Pesquisar");
+        JMenuItem researchBookItem = new JMenuItem("Pesquisar livro");
+        researchBookItem.addActionListener(e -> {
+            researchFrame = new BookResearchFrame(mainFrame, personalLibrarySys);
+            researchFrame.setVisible(true);
         });
-        pesquisaMenu.add(pesquisaLivro);
+        researchMenu.add(researchBookItem);
 
-        JMenu excluirMenu = new JMenu("Excluir");
-        JMenuItem excluirLivro = new JMenuItem("Excluir livro");
-        excluirMenu.add(excluirLivro);
+        JMenu removeMenu = new JMenu("Excluir");
+        JMenuItem removeBookItem = new JMenuItem("Excluir livro");
+        removeMenu.add(removeBookItem);
 
-        JMenu salvarMenu = new JMenu("Salvar");
-        JMenuItem salvarDados = new JMenuItem("Salvar dados");
-        salvarDados.addActionListener(e -> {
-            sistema.salvarDados();
+        JMenu salveMenu = new JMenu("Salvar");
+        JMenuItem saveDataItem = new JMenuItem("Salvar dados");
+        saveDataItem.addActionListener(e -> {
+            personalLibrarySys.saveBooks();
             JOptionPane.showMessageDialog(mainFrame, "Dados salvos com sucesso.");
         });
-        salvarMenu.add(salvarDados);
+        salveMenu.add(saveDataItem);
 
-        menuBar.add(cadastrarMenu);
-        menuBar.add(pesquisaMenu);
-        menuBar.add(excluirMenu);
-        menuBar.add(salvarMenu);
+        menuBar.add(registerMenu);
+        menuBar.add(researchMenu);
+        menuBar.add(removeMenu);
+        menuBar.add(salveMenu);
     }
 
     private void configLabels() {
@@ -72,8 +71,9 @@ public class PersonalLibrary {
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int resp = JOptionPane.showConfirmDialog(mainFrame, "Tem certeza de fechar?");
+                int resp = JOptionPane.showConfirmDialog(mainFrame, "Tem certeza de que quer fechar?");
                 if (resp == JOptionPane.YES_OPTION) {
+                    personalLibrarySys.saveBooks();
                     System.exit(0);
                 }
             }
@@ -88,10 +88,6 @@ public class PersonalLibrary {
         mainFrame.setLayout(new GridLayout(1, 2));
         mainFrame.add(title);
         mainFrame.add(image);
-    }
-
-    private void configCadastraFrame() {
-
     }
 
     public void run() {
