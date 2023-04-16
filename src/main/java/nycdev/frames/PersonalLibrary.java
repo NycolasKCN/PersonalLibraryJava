@@ -1,81 +1,110 @@
 package nycdev.frames;
 
-import nycdev.SistemaLivro;
+import nycdev.controllers.PersonalLibrarySystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class PersonalLibrary extends JFrame {
-
-    JLabel title, image;
+/**
+ * @author Nycolas Kevin
+ */
+public class PersonalLibrary {
+    JFrame mainFrame;
+    RegisterBookFrame registerFrame;
+    SearchBookFrame researchFrame;
+    RemoveBookFrame removeFrame;
     JMenuBar menuBar = new JMenuBar();
-    JFrame cadastraFrame;
-    ImageIcon reiImg = new ImageIcon("src/main/resources/assets/reiImg.png");
+    JLabel title, image;
+    ImageIcon reiImg = new ImageIcon("src/main/resources/assets/rei with books.png");
+    ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_library_books_black_48dp.png");
 
-    SistemaLivro sistema;
-
+    PersonalLibrarySystem personalLibrarySys;
 
     public PersonalLibrary() {
-        sistema = new SistemaLivro();
-        JFrame f = this;
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
+        personalLibrarySys = new PersonalLibrarySystem();
+        configFrame();
+        configMenuBar();
+        configComponents();
+        configFrame();
+        configLayout();
+    }
+
+    private void configMenuBar() {
+        JMenu registerMenu = new JMenu("Cadastrar");
+        JMenuItem registerBookItem = new JMenuItem("Cadastar novo livro");
+        registerBookItem.addActionListener(e -> {
+            registerFrame = new RegisterBookFrame(mainFrame, personalLibrarySys);
+            registerFrame.setVisible(true);
+        });
+        registerMenu.add(registerBookItem);
+
+        JMenu researchMenu = new JMenu("Pesquisar");
+        JMenuItem researchBookItem = new JMenuItem("Pesquisar livro");
+        researchBookItem.addActionListener(e -> {
+            researchFrame = new SearchBookFrame(mainFrame, personalLibrarySys);
+            researchFrame.setVisible(true);
+        });
+        researchMenu.add(researchBookItem);
+
+        JMenu removeMenu = new JMenu("Excluir");
+        JMenuItem removeBookItem = new JMenuItem("Excluir livro");
+        removeBookItem.addActionListener(e -> {
+            removeFrame = new RemoveBookFrame(mainFrame, personalLibrarySys);
+            removeFrame.setVisible(true);
+        });
+        removeMenu.add(removeBookItem);
+
+        JMenu salveMenu = new JMenu("Salvar");
+        JMenuItem saveDataItem = new JMenuItem("Salvar dados");
+        saveDataItem.addActionListener(e -> {
+            personalLibrarySys.saveBooks();
+            JOptionPane.showMessageDialog(mainFrame, "Dados salvos com sucesso.");
+        });
+        salveMenu.add(saveDataItem);
+
+        menuBar.add(registerMenu);
+        menuBar.add(researchMenu);
+        menuBar.add(removeMenu);
+        menuBar.add(salveMenu);
+    }
+
+    private void configFrame() {
+        mainFrame = new JFrame("PersonalLibrary");
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int resp = JOptionPane.showConfirmDialog(f, "Tem certeza de fechar?");
+                int resp = JOptionPane.showConfirmDialog(mainFrame, "Tem certeza de que quer fechar?");
                 if (resp == JOptionPane.YES_OPTION) {
+                    personalLibrarySys.saveBooks();
                     System.exit(0);
                 }
             }
         });
-
-
-        setSize(800,600);
-        setLocation(300, 50);
-        setResizable(false);
-        setTitle("PersonalLibrary");
-        setBackground(Color.lightGray);
-
-        cadastraFrame = new CadastrarLivroFrame(sistema);
-
-        title = new JLabel("Bem vindo, User", JLabel.CENTER);
-        title.setFont(new Font("serif", Font.BOLD, 28));
-        image = new JLabel(reiImg, JLabel.CENTER);
-
-        JMenu cadastrarMenu = new JMenu("Cadastrar");
-        JMenuItem cadastraLivro = new JMenuItem("Cadastar novo livro");
-        cadastraLivro.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cadastraFrame.setVisible(true);
-            }
-        });
-        cadastrarMenu.add(cadastraLivro);
-
-        JMenu pesquisaMenu = new JMenu("Pesquisar");
-        JMenuItem pesquisaLivro = new JMenuItem("Pesquisar livro");
-        pesquisaMenu.add(pesquisaLivro);
-        JMenu excluirMenu = new JMenu("Excluir");
-        JMenuItem excluirLivro = new JMenuItem("Excluir livro");
-        excluirMenu.add(excluirLivro);
-
-        menuBar.add(cadastrarMenu);
-        menuBar.add(pesquisaMenu);
-        menuBar.add(excluirMenu);
-
-        setJMenuBar(menuBar);
-        setLayout(new GridLayout(1,2));
-        add(title);
-        add(image);
-
+        mainFrame.setIconImage(icon.getImage());
+        mainFrame.setBackground(Color.lightGray);
+        mainFrame.setLocation(300, 50);
+        mainFrame.setResizable(false);
+        mainFrame.setSize(800, 600);
+        mainFrame.setJMenuBar(menuBar);
     }
 
-    public static void main(String[] args) {
-        JFrame f = new PersonalLibrary();
-        f.setVisible(true);
+
+    private void configComponents() {
+        title = new JLabel("Bem vindo!!", JLabel.CENTER);
+        title.setFont(new Font("Noto sans", Font.BOLD, 28));
+        image = new JLabel(reiImg, JLabel.CENTER);
+    }
+
+    private void configLayout() {
+        mainFrame.setLayout(new GridLayout(1, 2));
+        mainFrame.add(title);
+        mainFrame.add(image);
+    }
+
+    public void run() {
+        mainFrame.setVisible(true);
     }
 }
