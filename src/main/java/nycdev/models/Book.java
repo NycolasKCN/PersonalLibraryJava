@@ -7,6 +7,7 @@ import java.util.Objects;
  * @author Nycolas Kevin
  */
 public class Book implements Serializable {
+    private Long id;
     private String title;
     private String author;
     private String pages;
@@ -18,6 +19,14 @@ public class Book implements Serializable {
     }
 
     protected Book() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

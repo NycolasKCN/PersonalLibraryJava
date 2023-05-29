@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import nycdev.AuthenticationException;
 import nycdev.UserAlreadyExistException;
 import nycdev.models.User;
+import static nycdev.Util.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class LoginService {
-    private String webService = "http://localhost:8080/v1/";
+    private final String webService = "http://localhost:8080/v1/";
 
     public void registerUser(String name, String login, String password) throws UserAlreadyExistException {
         String urlString = webService + "user";
@@ -46,36 +47,40 @@ public class LoginService {
     public User authenticateUser(String login, String password) throws AuthenticationException {
         try {
             URL url = new URL("http://localhost:8080/token");
-            HttpURLConnection http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("POST");
-            http.setDoOutput(true);
-            http.setRequestProperty("Content-Type", "application/json");
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
 
             String data = String.format("{\"login\" : \"%s\",\"password\" : \"%s\"}", login, password);
 
             byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
-            OutputStream stream = http.getOutputStream();
+            OutputStream stream = connection.getOutputStream();
             stream.write(out);
 
-            if (http.getResponseCode() == 400) {
+            if (connection.getResponseCode() == 400) {
                 throw new AuthenticationException("Login or password is incorrect.");
             }
 
-            BufferedReader response = new BufferedReader(new InputStreamReader(http.getInputStream()));
+            BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             Gson gson = new Gson();
-            return gson.fromJson(LoginService.convertJsonToString(response), User.class);
+            User user = gson.fromJson(convertJsonToString(response), User.class);
+            connection.disconnect();
+            return user;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String convertJsonToString(BufferedReader bufferedReader) throws IOException {
-        StringBuilder jsonEmString = new StringBuilder();
-        for (String response = bufferedReader.readLine(); response != null; response = bufferedReader.readLine()){
-            jsonEmString.append(response);
-
+    public static void main(String[] args) {
+        LoginService service = new LoginService();
+        try {
+            service.registerUser("Nycolas Kevin", "nycolas.costa", "12345678");
+            User user = service.authenticateUser("nycolas.costa", "12345678");
+            System.out.println(user);
+        } catch (UserAlreadyExistException | AuthenticationException e) {
+            throw new RuntimeException(e);
         }
-        return jsonEmString.toString();
     }
 }
