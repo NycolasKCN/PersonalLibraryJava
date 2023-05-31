@@ -1,6 +1,8 @@
 package nycdev.frames;
 
-import nycdev.controllers.PersonalLibrarySystem;
+import nycdev.PersonalLibrarySystem;
+import nycdev.service.AuthenticationException;
+import nycdev.service.BookAlreadyExistException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,12 +54,16 @@ public class RegisterBookFrame {
             String titleBook = titleTF.getText();
             String authorName = authorTF.getText();
             String pages = numPagIn.getText();
-            boolean confirm = sys.addBook(titleBook, authorName, pages);
-            if (confirm) {
-                JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
-            } else {
+            try {
+                sys.addBook(titleBook, authorName, pages);
+            } catch (BookAlreadyExistException ex) {
                 JOptionPane.showMessageDialog(frame, "Livro já está cadastrado!");
+                return;
+            } catch (AuthenticationException ex) {
+                JOptionPane.showMessageDialog(frame, "O Usuário não tem permissão para cadastrar o livro.");
+                return;
             }
+            JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
             frame.dispose();
         });
         cancelBt = new JButton("Cancelar");

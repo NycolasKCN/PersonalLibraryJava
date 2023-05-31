@@ -1,6 +1,6 @@
 package nycdev.frames;
 
-import nycdev.controllers.PersonalLibrarySystem;
+import nycdev.PersonalLibrarySystem;
 import nycdev.models.Book;
 
 import javax.swing.*;

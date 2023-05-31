@@ -1,8 +1,6 @@
 package nycdev.service;
 
 import com.google.gson.Gson;
-import nycdev.AuthenticationException;
-import nycdev.UserAlreadyExistException;
 import nycdev.models.User;
 import static nycdev.Util.*;
 
@@ -47,7 +45,7 @@ public class LoginService {
     public User authenticateUser(String login, String password) throws AuthenticationException {
         try {
             URL url = new URL("http://localhost:8080/token");
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/json");

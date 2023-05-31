@@ -1,10 +1,9 @@
 package nycdev;
 
-import nycdev.frames.PersonalLibrary;
+import nycdev.frames.MenuFrame;
 
 public class Main {
     public static void main(String[] args) {
-        PersonalLibrary o = new PersonalLibrary();
-        o.run();
+        MenuFrame o = new MenuFrame();
     }
 }

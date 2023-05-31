@@ -1,5 +1,7 @@
 package nycdev.models;
 
+import nycdev.dto.BookDto;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,6 +9,7 @@ import java.util.Objects;
  * @author Nycolas Kevin
  */
 public class Book implements Serializable {
+
     private Long id;
     private String title;
     private String author;
@@ -16,6 +19,12 @@ public class Book implements Serializable {
         this.title = title;
         this.author = author;
         this.pages = pages;
+    }
+
+    public Book(BookDto bookDto) {
+        this.id = bookDto.getId();
+        this.title = bookDto.getName();
+        this.author = bookDto.getAuthor();
     }
 
     protected Book() {

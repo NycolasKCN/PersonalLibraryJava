@@ -1,7 +1,11 @@
-package nycdev.controllers;
+package nycdev;
 
 import nycdev.database.DataBase;
 import nycdev.models.Book;
+import nycdev.models.User;
+import nycdev.service.AuthenticationException;
+import nycdev.service.BookAlreadyExistException;
+import nycdev.service.BookService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,14 +18,14 @@ import java.util.List;
  */
 public class PersonalLibrarySystem {
     private final List<Book> books;
+    private final BookService bookService = new BookService();
     private final DataBase db = new DataBase();
+    private final User user;
 
-    public PersonalLibrarySystem() {
-        try {
-            this.books = db.readBooks();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+    public PersonalLibrarySystem(User user) {
+        this.user = user;
+        this.books = bookService.allBooksUser(user.getToken(), user.getId());
     }
 
     private boolean hasBook(Book book) {
@@ -33,10 +37,11 @@ public class PersonalLibrarySystem {
         return false;
     }
 
-    public boolean addBook(String title, String author, String pages) {
+    public boolean addBook(String title, String author, String pages) throws BookAlreadyExistException, AuthenticationException {
         Book b = new Book(title, author, pages);
         if (!hasBook(b)) {
-            this.books.add(new Book(title, author, pages));
+            this.books.add(b);
+            bookService.registerBook(user.getToken(), user.getId(),b);
             return true;
         }
         return false;
@@ -107,7 +112,7 @@ public class PersonalLibrarySystem {
     }
 
     public static void main(String[] args) {
-        PersonalLibrarySystem sys = new PersonalLibrarySystem();
+        PersonalLibrarySystem sys = new PersonalLibrarySystem(new User(0L, ""));
         PersonalLibrarySystem.populateDataBase(sys);
         sys.saveBooks();
     }

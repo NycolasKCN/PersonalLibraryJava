@@ -1,6 +1,7 @@
 package nycdev.frames;
 
-import nycdev.controllers.PersonalLibrarySystem;
+import nycdev.PersonalLibrarySystem;
+import nycdev.models.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.awt.event.WindowEvent;
 /**
  * @author Nycolas Kevin
  */
-public class PersonalLibrary {
+public class MenuFrame {
     JFrame mainFrame;
     RegisterBookFrame registerFrame;
     SearchBookFrame researchFrame;
@@ -21,14 +22,19 @@ public class PersonalLibrary {
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_library_books_black_48dp.png");
 
     PersonalLibrarySystem personalLibrarySys;
+    User user;
 
-    public PersonalLibrary() {
-        personalLibrarySys = new PersonalLibrarySystem();
+    public MenuFrame() {
+//        personalLibrarySys = new PersonalLibrarySystem(user);
         configFrame();
         configMenuBar();
         configComponents();
         configFrame();
         configLayout();
+    }
+
+    public void login() {
+
     }
 
     private void configMenuBar() {
@@ -104,7 +110,7 @@ public class PersonalLibrary {
         mainFrame.add(image);
     }
 
-    public void run() {
+    public void setVisible(boolean b) {
         mainFrame.setVisible(true);
     }
 }
