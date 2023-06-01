@@ -26,22 +26,19 @@ public class MenuFrame {
 
     public MenuFrame() {
 //        personalLibrarySys = new PersonalLibrarySystem(user);
-        configFrame();
         configMenuBar();
-        configComponents();
         configFrame();
+        configComponents();
         configLayout();
-    }
-
-    public void login() {
-
     }
 
     private void configMenuBar() {
         JMenu registerMenu = new JMenu("Cadastrar");
         JMenuItem registerBookItem = new JMenuItem("Cadastar novo livro");
         registerBookItem.addActionListener(e -> {
-            registerFrame = new RegisterBookFrame(mainFrame, personalLibrarySys);
+            if (registerFrame == null) {
+                registerFrame = new RegisterBookFrame(mainFrame, personalLibrarySys);
+            }
             registerFrame.setVisible(true);
         });
         registerMenu.add(registerBookItem);
@@ -49,7 +46,9 @@ public class MenuFrame {
         JMenu researchMenu = new JMenu("Pesquisar");
         JMenuItem researchBookItem = new JMenuItem("Pesquisar livro");
         researchBookItem.addActionListener(e -> {
-            researchFrame = new SearchBookFrame(mainFrame, personalLibrarySys);
+            if (researchFrame == null) {
+                researchFrame = new SearchBookFrame(mainFrame, personalLibrarySys);
+            }
             researchFrame.setVisible(true);
         });
         researchMenu.add(researchBookItem);
@@ -57,7 +56,9 @@ public class MenuFrame {
         JMenu removeMenu = new JMenu("Excluir");
         JMenuItem removeBookItem = new JMenuItem("Excluir livro");
         removeBookItem.addActionListener(e -> {
-            removeFrame = new RemoveBookFrame(mainFrame, personalLibrarySys);
+            if (removeFrame == null) {
+                removeFrame = new RemoveBookFrame(mainFrame, personalLibrarySys);
+            }
             removeFrame.setVisible(true);
         });
         removeMenu.add(removeBookItem);
@@ -111,6 +112,10 @@ public class MenuFrame {
     }
 
     public void setVisible(boolean b) {
-        mainFrame.setVisible(true);
+        mainFrame.setVisible(b);
+    }
+
+    public static void main(String[] args) {
+        new MenuFrame().setVisible(true);
     }
 }

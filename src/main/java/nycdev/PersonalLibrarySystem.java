@@ -5,7 +5,7 @@ import nycdev.models.Book;
 import nycdev.models.User;
 import nycdev.service.AuthenticationException;
 import nycdev.service.BookAlreadyExistException;
-import nycdev.service.BookService;
+import nycdev.service.WebService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class PersonalLibrarySystem {
     private final List<Book> books;
-    private final BookService bookService = new BookService();
+    private final WebService bookService = new WebService();
     private final DataBase db = new DataBase();
     private final User user;
 

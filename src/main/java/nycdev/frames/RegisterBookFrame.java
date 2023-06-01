@@ -16,7 +16,6 @@ public class RegisterBookFrame {
     JTextField titleTF, authorTF, numPagIn;
     JButton saveBt, cancelBt;
     PersonalLibrarySystem sys;
-
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_add_circle_outline_black_48dp.png");
 
     public RegisterBookFrame(JFrame parent, PersonalLibrarySystem sys) {
