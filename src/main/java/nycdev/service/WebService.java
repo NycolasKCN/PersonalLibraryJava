@@ -22,16 +22,17 @@ import static nycdev.Util.convertJsonToString;
 public class WebService {
   private final String webService = "http://localhost:8080/";
 
-  public Book registerBook(String token, Long userId, Book book) throws AuthenticationException, BookAlreadyExistException {
+  public Book registerBook(User user, Book book) throws AuthenticationException, BookAlreadyExistException {
     try {
       URL url = new URL(webService + "v1/book");
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("POST");
       connection.setDoOutput(true);
-      connection.setRequestProperty("Authorization", "Bearer " + token);
+      connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
       connection.setRequestProperty("Content-Type", "application/json");
 
-      String data = String.format("{\"userId\" : %d,\"name\" : \"%s\",\"author\": \"%s\"}", userId, book.getName(), book.getAuthor());
+      String data = String.format("{\"userId\" : %d,\"name\" : \"%s\",\"author\": \"%s\",\"pages\": \"%s\"}",
+              user.getId(), book.getName(), book.getAuthor(), book.getPages());
 
       byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
@@ -39,7 +40,7 @@ public class WebService {
       stream.write(out);
 
       if (connection.getResponseCode() == 401) {
-        throw new AuthenticationException("User with id: " + userId + " don't have access to register book");
+        throw new AuthenticationException("User with id: " + user.getId() + " don't have access to register book");
       }
       if (connection.getResponseCode() == 400) {
         throw new BookAlreadyExistException("Book with name: " + book.getName() + " already register");
@@ -57,36 +58,36 @@ public class WebService {
     }
   }
 
-  public void deleteBook(String token, Long bookId) throws AuthenticationException, BookNotFoundException {
+  public void deleteBook(User user, Book book) throws AuthenticationException, BookNotFoundException {
     try {
-      String urlString = String.format("%s%s%d",webService,"v1/book/delete/",bookId);
+      String urlString = String.format("%s%s%d",webService,"v1/book/delete/",book.getId());
       URL url = new URL(urlString);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("DELETE");
-      connection.setRequestProperty("Authorization", "Bearer " + token);
+      connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
       connection.setRequestProperty("Content-Type", "application/json");
 
       if (connection.getResponseCode() == 401) {
-        throw new AuthenticationException("User don't have permission do delete book with id: " + bookId);
+        throw new AuthenticationException("User don't have permission do delete book with id: " + book.getId());
       }
       if (connection.getResponseCode() == 400) {
-        throw new BookNotFoundException("Book with id: " + bookId + " not founded.");
+        throw new BookNotFoundException("Book with id: " + book.getId() + " not founded.");
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public List<Book> allBooksUser(String token, Long userId) {
+  public List<Book> allBooksUser(User user) {
     try {
       URL url = new URL(webService + "v1/book/all");
       HttpURLConnection connection = (HttpURLConnection)url.openConnection();
       connection.setRequestMethod("POST");
       connection.setDoOutput(true);
-      connection.setRequestProperty("Authorization", "Bearer " + token);
+      connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
       connection.setRequestProperty("Content-Type", "application/json");
 
-      String data = String.format("{\"userId\" : %d}", userId);
+      String data = String.format("{\"userId\" : %d}", user.getId());
 
       byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
@@ -94,7 +95,7 @@ public class WebService {
       stream.write(out);
 
       BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-      List<Book> listBook = getBookDtos(response);
+      List<Book> listBook = getBookDto(response);
       connection.disconnect();
       return listBook;
     } catch (IOException e) {
@@ -102,7 +103,42 @@ public class WebService {
     }
   }
 
-  private static List<Book> getBookDtos(BufferedReader response) throws IOException {
+  public List<Book> findBooksByName(User user, String name) {
+    try {
+      String urlString = webService + "v1/book/findByName/" + name;
+      URL url = new URL(urlString);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("GET");
+      connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
+      connection.setRequestProperty("Content-Type", "application/json");
+
+      BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      List<Book> listBook = getBookDto(response);
+      connection.disconnect();
+      return listBook;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public List<Book> findBooksByAuthor(User user, String author) {
+    try {
+      String urlString = webService + "v1/book/findByAuthor/" + author;
+      URL url = new URL(urlString);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod("GET");
+      connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
+      connection.setRequestProperty("Content-Type", "application/json");
+
+      BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      List<Book> listBook = getBookDto(response);
+      connection.disconnect();
+      return listBook;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  private static List<Book> getBookDto(BufferedReader response) throws IOException {
     String json = Util.convertJsonToString(response);
     ObjectMapper objectMapper = new ObjectMapper();
     List<BookDto> listBook = objectMapper.readValue(json, new TypeReference<List<BookDto>>(){});

@@ -1,6 +1,6 @@
 package nycdev.frames;
 
-import nycdev.PersonalLibrarySystem;
+import nycdev.PersonalLibrary;
 import nycdev.models.Book;
 
 import javax.swing.*;
@@ -12,12 +12,13 @@ import java.util.List;
  * @author Nycolas Kevin
  */
 public class SearchBookFrame {
-    private final PersonalLibrarySystem sys;
+    private final PersonalLibrary personalLibrary;
     private final JFrame parent;
     String[] collumns = {"id", "Título", "Autor", "Número de páginas"};
-    String[][] resultado;
+    String[][] result;
     JTextField query;
-    JCheckBox nameCB, authorCB;
+    JRadioButton searchByName, getAll, searchByAuthor;
+    ButtonGroup group;
     JButton pesquisarBt;
     JFrame frame;
     JTable tableResult;
@@ -26,9 +27,9 @@ public class SearchBookFrame {
 
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_search_black_48dp.png");
 
-    public SearchBookFrame(JFrame parent, PersonalLibrarySystem sys) {
+    public SearchBookFrame(JFrame parent, PersonalLibrary personalLibrary) {
         this.parent = parent;
-        this.sys = sys;
+        this.personalLibrary = personalLibrary;
 
         configFrame();
         configComponents();
@@ -74,10 +75,19 @@ public class SearchBookFrame {
 
     private void configComponents() {
         query = new JTextField();
-        nameCB = new JCheckBox();
-        nameCB.setText("Pesquisar pelo Título");
-        authorCB = new JCheckBox();
-        authorCB.setText("Pequisar pelo Autor");
+
+        searchByName = new JRadioButton();
+        searchByName.setText("Pesquisar pelo Título");
+        searchByAuthor = new JRadioButton();
+        searchByAuthor.setText("Pequisar pelo Autor");
+        getAll = new JRadioButton();
+        getAll.setText("Find all");
+        group = new ButtonGroup();
+        group.add(getAll);
+        group.add(searchByName);
+        group.add(searchByAuthor);
+
+
         pesquisarBt = new JButton("Pesquisar");
         pesquisarBt.addActionListener(e -> {
             pesquisar();
@@ -87,11 +97,15 @@ public class SearchBookFrame {
 
     private void configLayout() {
         JPanel inputText = new JPanel();
-        inputText.setLayout(new GridLayout(3, 1));
+        inputText.setLayout(new GridLayout(2, 1));
         inputText.setBounds(0, 0, 600, 150);
+        JPanel radioButtonGroup = new JPanel();
+        radioButtonGroup.add(getAll);
+        radioButtonGroup.add(searchByName);
+        radioButtonGroup.add(searchByAuthor);
+
         inputText.add(query);
-        inputText.add(nameCB);
-        inputText.add(authorCB);
+        inputText.add(radioButtonGroup);
 
         scrollPane = new JScrollPane(tableResult);
 
@@ -105,21 +119,26 @@ public class SearchBookFrame {
 
     private void pesquisar() {
         String queryText = query.getText();
-        if (nameCB.isSelected() && authorCB.isSelected()) {
-            JOptionPane.showMessageDialog(frame, "Selecione apenas um modo de pesquisa");
+
+        if (queryText.equals("") && !getAll.isSelected()) {
+            JOptionPane.showMessageDialog(frame, "Digite um algo na caixa de seleção");
             return;
         }
-        if (nameCB.isSelected()) {
-            List<Book> result = sys.findBooksByTitle(queryText);
-            resultado = populateVector(result);
-        } else if (authorCB.isSelected()) {
-            List<Book> result = sys.findBooksByAuthor(queryText);
-            resultado = populateVector(result);
+
+        if (getAll.isSelected()) {
+            List<Book> listBook = personalLibrary.getWebService().allBooksUser(personalLibrary.getLogedUser());
+            result = populateVector(listBook);
+        } else if (searchByName.isSelected()) {
+            List<Book> listBook = personalLibrary.getWebService().findBooksByName(personalLibrary.getLogedUser(), queryText);
+            result = populateVector(listBook);
+        } else if (searchByAuthor.isSelected()) {
+            List<Book> listBook = personalLibrary.getWebService().findBooksByAuthor(personalLibrary.getLogedUser(), queryText);
+            result = populateVector(listBook);
         } else {
-            JOptionPane.showMessageDialog(frame, "Selecion um modo de pesquisa");
+            JOptionPane.showMessageDialog(frame, "Selecione um modo de pesquisa");
             return;
         }
-        tableModel = new DefaultTableModel(resultado, collumns);
+        tableModel = new DefaultTableModel(result, collumns);
         SearchBookFrame.configTableModel(tableResult, tableModel);
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
  * @author Nycolas Kevin
  */
 public class PersonalLibrarySystem {
-    private final List<Book> books;
+/*    private final List<Book> books;
     private final WebService bookService = new WebService();
     private final DataBase db = new DataBase();
     private final User user;
@@ -115,5 +115,5 @@ public class PersonalLibrarySystem {
         PersonalLibrarySystem sys = new PersonalLibrarySystem(new User(0L, ""));
         PersonalLibrarySystem.populateDataBase(sys);
         sys.saveBooks();
-    }
+    }*/
 }

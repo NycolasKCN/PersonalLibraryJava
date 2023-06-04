@@ -14,7 +14,7 @@ public class PersonalLibrary {
     private final RegisterFrame registerFrame;
 
     public PersonalLibrary() {
-        menuFrame = new MenuFrame();
+        menuFrame = new MenuFrame(this);
         loginFrame = new LoginFrame(this);
         registerFrame = new RegisterFrame(this);
     }

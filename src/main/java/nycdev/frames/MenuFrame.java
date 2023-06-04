@@ -1,7 +1,6 @@
 package nycdev.frames;
 
-import nycdev.PersonalLibrarySystem;
-import nycdev.models.User;
+import nycdev.PersonalLibrary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,11 +20,10 @@ public class MenuFrame {
     ImageIcon reiImg = new ImageIcon("src/main/resources/assets/rei with books.png");
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_library_books_black_48dp.png");
 
-    PersonalLibrarySystem personalLibrarySys;
-    User user;
+    PersonalLibrary personalLibrary;
 
-    public MenuFrame() {
-//        personalLibrarySys = new PersonalLibrarySystem(user);
+    public MenuFrame(PersonalLibrary personalLibrary) {
+        this.personalLibrary = personalLibrary;
         configMenuBar();
         configFrame();
         configComponents();
@@ -37,7 +35,7 @@ public class MenuFrame {
         JMenuItem registerBookItem = new JMenuItem("Cadastar novo livro");
         registerBookItem.addActionListener(e -> {
             if (registerFrame == null) {
-                registerFrame = new RegisterBookFrame(mainFrame, personalLibrarySys);
+                registerFrame = new RegisterBookFrame(mainFrame, personalLibrary);
             }
             registerFrame.setVisible(true);
         });
@@ -47,7 +45,7 @@ public class MenuFrame {
         JMenuItem researchBookItem = new JMenuItem("Pesquisar livro");
         researchBookItem.addActionListener(e -> {
             if (researchFrame == null) {
-                researchFrame = new SearchBookFrame(mainFrame, personalLibrarySys);
+                researchFrame = new SearchBookFrame(mainFrame, personalLibrary);
             }
             researchFrame.setVisible(true);
         });
@@ -57,24 +55,14 @@ public class MenuFrame {
         JMenuItem removeBookItem = new JMenuItem("Excluir livro");
         removeBookItem.addActionListener(e -> {
             if (removeFrame == null) {
-                removeFrame = new RemoveBookFrame(mainFrame, personalLibrarySys);
+                removeFrame = new RemoveBookFrame(mainFrame, personalLibrary);
             }
             removeFrame.setVisible(true);
         });
         removeMenu.add(removeBookItem);
-
-        JMenu salveMenu = new JMenu("Salvar");
-        JMenuItem saveDataItem = new JMenuItem("Salvar dados");
-        saveDataItem.addActionListener(e -> {
-            personalLibrarySys.saveBooks();
-            JOptionPane.showMessageDialog(mainFrame, "Dados salvos com sucesso.");
-        });
-        salveMenu.add(saveDataItem);
-
         menuBar.add(registerMenu);
         menuBar.add(researchMenu);
         menuBar.add(removeMenu);
-        menuBar.add(salveMenu);
     }
 
     private void configFrame() {
@@ -85,7 +73,6 @@ public class MenuFrame {
             public void windowClosing(WindowEvent e) {
                 int resp = JOptionPane.showConfirmDialog(mainFrame, "Tem certeza de que quer fechar?");
                 if (resp == JOptionPane.YES_OPTION) {
-                    personalLibrarySys.saveBooks();
                     System.exit(0);
                 }
             }
@@ -113,9 +100,5 @@ public class MenuFrame {
 
     public void setVisible(boolean b) {
         mainFrame.setVisible(b);
-    }
-
-    public static void main(String[] args) {
-        new MenuFrame().setVisible(true);
     }
 }

@@ -1,7 +1,9 @@
 package nycdev.frames;
 
-import nycdev.PersonalLibrarySystem;
+import nycdev.PersonalLibrary;
 import nycdev.models.Book;
+import nycdev.service.AuthenticationException;
+import nycdev.service.BookNotFoundException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,22 +18,27 @@ import static nycdev.frames.SearchBookFrame.populateVector;
  */
 public class RemoveBookFrame {
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_delete_black_48dp.png");
-    PersonalLibrarySystem sys;
+    PersonalLibrary personalLibrary;
     JFrame frame, parent;
-    JLabel titleLabel, authorLabel;
-    JTextField titleTF, authorTF;
     JButton removeBt;
     JTable table;
     DefaultTableModel tableModel;
     String[] columns = {"id", "Título", "Autor", "Número de páginas"};
+    List<Book> books;
 
-    public RemoveBookFrame(JFrame parent, PersonalLibrarySystem sys) {
+
+    public RemoveBookFrame(JFrame parent, PersonalLibrary personalLibrary) {
         this.parent = parent;
-        this.sys = sys;
+        this.personalLibrary = personalLibrary;
+        setBooks();
         configFrame();
         configComponents();
-        updateTable(sys.getAllBooks());
+        updateTable(books);
         configLayout();
+    }
+
+    private void setBooks() {
+        books = personalLibrary.getWebService().allBooksUser(personalLibrary.getLogedUser());
     }
 
     public void configFrame() {
@@ -45,47 +52,31 @@ public class RemoveBookFrame {
     }
 
     public void configComponents() {
-        titleLabel = new JLabel("Título: ", JLabel.CENTER);
-        titleLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        authorLabel = new JLabel("Autor: ", JLabel.CENTER);
-        authorLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-
-        titleTF = new JTextField();
-        authorTF = new JTextField();
-
         removeBt = new JButton("Apagar");
-        removeBt.addActionListener(e -> {
-            String title = titleTF.getText();
-            String author = authorTF.getText();
-            boolean success = sys.removeBook(title, author);
-            if (success) {
-                JOptionPane.showMessageDialog(frame, "Livro apagado com sucesso.");
-            } else {
-                JOptionPane.showMessageDialog(frame, "Livro não existe ou não encontrado.");
+        removeBt.addActionListener((e) -> {
+            Book book = books.get(table.getSelectedRow());
+            try {
+                personalLibrary.getWebService().deleteBook(personalLibrary.getLogedUser(), book);
+                books = personalLibrary.getWebService().allBooksUser(personalLibrary.getLogedUser());
+            } catch (AuthenticationException ex) {
+                JOptionPane.showMessageDialog(frame, "You don't have permission to delete this book.");
+            } catch (BookNotFoundException ex) {
+                JOptionPane.showMessageDialog(frame, "Book not founded.");
             }
-            frame.dispose();
-        });
+            JOptionPane.showMessageDialog(frame,"Livro removido com sucesso.");
 
+            updateTable(books);
+        });
         table = new JTable();
     }
 
     public void configLayout() {
-        GridLayout panelLayout = new GridLayout(2, 2);
-        panelLayout.setVgap(6);
-        JPanel inputPanel = new JPanel(panelLayout);
-        inputPanel.setBounds(0, 5, 600, 200);
-        inputPanel.add(titleLabel);
-        inputPanel.add(titleTF);
-        inputPanel.add(authorLabel);
-        inputPanel.add(authorTF);
-
         JScrollPane tablePanel = new JScrollPane(table);
 
         BorderLayout frameLayout = new BorderLayout();
         frameLayout.setVgap(10);
         frameLayout.setHgap(30);
         frame.setLayout(frameLayout);
-        frame.add(inputPanel, BorderLayout.NORTH);
         frame.add(tablePanel, BorderLayout.CENTER);
         frame.add(removeBt, BorderLayout.AFTER_LAST_LINE);
     }

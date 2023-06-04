@@ -1,6 +1,7 @@
 package nycdev.frames;
 
-import nycdev.PersonalLibrarySystem;
+import nycdev.PersonalLibrary;
+import nycdev.models.Book;
 import nycdev.service.AuthenticationException;
 import nycdev.service.BookAlreadyExistException;
 
@@ -15,11 +16,11 @@ public class RegisterBookFrame {
     JLabel titleLabel, authorLabel, pageLabel;
     JTextField titleTF, authorTF, numPagIn;
     JButton saveBt, cancelBt;
-    PersonalLibrarySystem sys;
+    PersonalLibrary personalLibrary;
     ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_add_circle_outline_black_48dp.png");
 
-    public RegisterBookFrame(JFrame parent, PersonalLibrarySystem sys) {
-        this.sys = sys;
+    public RegisterBookFrame(JFrame parent, PersonalLibrary sys) {
+        this.personalLibrary = sys;
         this.parent = parent;
         configFrame();
         configComponents();
@@ -54,7 +55,7 @@ public class RegisterBookFrame {
             String authorName = authorTF.getText();
             String pages = numPagIn.getText();
             try {
-                sys.addBook(titleBook, authorName, pages);
+                personalLibrary.getWebService().registerBook(personalLibrary.getLogedUser(), new Book(titleBook, authorName, pages));
             } catch (BookAlreadyExistException ex) {
                 JOptionPane.showMessageDialog(frame, "Livro já está cadastrado!");
                 return;

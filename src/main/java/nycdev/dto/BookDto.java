@@ -4,15 +4,17 @@ public class BookDto {
     private Long id;
     private String name;
     private String author;
+    private String pages;
     private String owner;
 
     public BookDto() {
     }
 
-    public BookDto(Long id, String name, String author, String owner) {
+    public BookDto(Long id, String name, String author, String pages, String owner) {
         this.id = id;
         this.name = name;
         this.author = author;
+        this.pages = pages;
         this.owner = owner;
     }
 
@@ -46,6 +48,14 @@ public class BookDto {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getPages() {
+        return pages;
+    }
+
+    public void setPages(String pages) {
+        this.pages = pages;
     }
 
     @Override
