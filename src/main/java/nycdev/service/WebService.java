@@ -22,7 +22,7 @@ import static nycdev.Util.convertJsonToString;
 public class WebService {
   private final String webService = "http://localhost:8080/";
 
-  public Book registerBook(User user, Book book) throws AuthenticationException, BookAlreadyExistException {
+  public void registerBook(User user, Book book) throws AuthenticationException, BookAlreadyExistException {
     try {
       URL url = new URL(webService + "v1/book");
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -45,14 +45,7 @@ public class WebService {
       if (connection.getResponseCode() == 400) {
         throw new BookAlreadyExistException("Book with name: " + book.getName() + " already register");
       }
-
-      BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-      Gson gson = new Gson();
-      BookDto bookDto = gson.fromJson(response, BookDto.class);
-      System.out.println(bookDto);
       connection.disconnect();
-      book.setId(bookDto.getId());
-      return book;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

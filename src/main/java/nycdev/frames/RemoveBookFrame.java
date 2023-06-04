@@ -10,8 +10,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-import static nycdev.frames.SearchBookFrame.configTableModel;
-import static nycdev.frames.SearchBookFrame.populateVector;
+import static nycdev.Util.configTableModel;
+import static nycdev.Util.getPosition;
+import static nycdev.Util.populateVector;
 
 /**
  * @author Nycolas Kevin
@@ -47,7 +48,7 @@ public class RemoveBookFrame {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setResizable(false);
-        frame.setLocation(getPosition());
+        frame.setLocation(getPosition(parent, frame));
         frame.setBackground(Color.lightGray);
     }
 
@@ -90,21 +91,4 @@ public class RemoveBookFrame {
     public void setVisible(boolean b) {
         frame.setVisible(b);
     }
-
-    private Point getParentLocation() {
-        if (this.parent == null) {
-            return new Point(0, 0);
-        }
-        return this.parent.getLocationOnScreen();
-    }
-
-    private Point getPosition() {
-        Point posParent = getParentLocation();
-        Dimension sizeParent = parent.getSize();
-        Dimension sizeThis = frame.getSize();
-        int x = (int) ((posParent.getX() + (sizeParent.getWidth() / 2)) - (sizeThis.getWidth() / 2));
-        int y = (int) ((posParent.getY() + (sizeParent.getHeight() / 2)) - (sizeThis.getHeight() / 2));
-        return new Point(x, y);
-    }
-
 }

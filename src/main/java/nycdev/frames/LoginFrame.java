@@ -61,7 +61,6 @@ public class LoginFrame{
             try {
                 String login = loginField.getText();
                 String password = String.valueOf(passwordField.getPassword());
-                System.out.println(login + " - " + password);
                 User loggedUser = personalLibrary.getWebService().authenticateUser(login, password);
                 personalLibrary.setLoggedUser(loggedUser);
                 personalLibrary.changeToMenu();

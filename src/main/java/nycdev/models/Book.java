@@ -25,6 +25,7 @@ public class Book implements Serializable {
         this.id = bookDto.getId();
         this.title = bookDto.getName();
         this.author = bookDto.getAuthor();
+        this.pages = bookDto.getPages();
     }
 
     protected Book() {

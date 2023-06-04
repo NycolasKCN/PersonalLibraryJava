@@ -8,6 +8,8 @@ import nycdev.service.BookAlreadyExistException;
 import javax.swing.*;
 import java.awt.*;
 
+import static nycdev.Util.getPosition;
+
 /**
  * @author Nycolas Kevin
  */
@@ -34,7 +36,7 @@ public class RegisterBookFrame {
         frame.setSize(400, 200);
         frame.setResizable(false);
         frame.setBackground(Color.lightGray);
-        frame.setLocation(getPosition());
+        frame.setLocation(getPosition(parent, frame));
     }
 
     private void configComponents() {
@@ -58,12 +60,15 @@ public class RegisterBookFrame {
                 personalLibrary.getWebService().registerBook(personalLibrary.getLogedUser(), new Book(titleBook, authorName, pages));
             } catch (BookAlreadyExistException ex) {
                 JOptionPane.showMessageDialog(frame, "Livro já está cadastrado!");
+                cleanInputs();
                 return;
             } catch (AuthenticationException ex) {
                 JOptionPane.showMessageDialog(frame, "O Usuário não tem permissão para cadastrar o livro.");
+                cleanInputs();
                 return;
             }
             JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
+            cleanInputs();
             frame.dispose();
         });
         cancelBt = new JButton("Cancelar");
@@ -87,20 +92,10 @@ public class RegisterBookFrame {
         frame.add(saveBt);
     }
 
-    private Point getParentLocation() {
-        if (this.parent == null) {
-            return new Point(0, 0);
-        }
-        return this.parent.getLocationOnScreen();
-    }
-
-    private Point getPosition() {
-        Point posParent = getParentLocation();
-        Dimension sizeParent = parent.getSize();
-        Dimension sizeThis = frame.getSize();
-        int x = (int) (posParent.getX() + (sizeParent.getWidth() / 2) - (sizeThis.getWidth() / 2));
-        int y = (int) (posParent.getY() + (sizeParent.getHeight() / 2) - (sizeThis.getHeight() / 2));
-        return new Point(x, y);
+    private void cleanInputs() {
+        titleTF.setText("");
+        authorTF.setText("");
+        numPagIn.setText("");
     }
 
     public void setVisible(boolean b) {
