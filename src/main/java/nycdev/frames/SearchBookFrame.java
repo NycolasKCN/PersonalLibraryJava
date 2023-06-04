@@ -40,7 +40,7 @@ public class SearchBookFrame {
 
 
     private void configFrame() {
-        frame = new JFrame("Pesquisar livros");
+        frame = new JFrame("Search books");
         frame.setIconImage(icon.getImage());
         frame.setBackground(Color.lightGray);
         frame.setResizable(false);
@@ -52,20 +52,20 @@ public class SearchBookFrame {
         query = new JTextField();
 
         searchByName = new JRadioButton();
-        searchByName.setText("Pesquisar pelo Título");
+        searchByName.setText("Search by Title");
         searchByAuthor = new JRadioButton();
-        searchByAuthor.setText("Pequisar pelo Autor");
+        searchByAuthor.setText("Search by Author");
         getAll = new JRadioButton();
         getAll.setText("Find all");
+        getAll.setSelected(true);
         group = new ButtonGroup();
         group.add(getAll);
         group.add(searchByName);
         group.add(searchByAuthor);
 
-
-        pesquisarBt = new JButton("Pesquisar");
+        pesquisarBt = new JButton("Search");
         pesquisarBt.addActionListener(e -> {
-            pesquisar();
+            query();
         });
         tableResult = new JTable();
     }
@@ -92,11 +92,11 @@ public class SearchBookFrame {
         frame.add(pesquisarBt, BorderLayout.AFTER_LAST_LINE);
     }
 
-    private void pesquisar() {
+    private void query() {
         String queryText = query.getText();
 
         if (queryText.equals("") && !getAll.isSelected()) {
-            JOptionPane.showMessageDialog(frame, "Digite um algo na caixa de seleção");
+            JOptionPane.showMessageDialog(frame, "Type something in the text box.");
             return;
         }
 
@@ -110,7 +110,7 @@ public class SearchBookFrame {
             List<Book> listBook = personalLibrary.getWebService().findBooksByAuthor(personalLibrary.getLogedUser(), queryText);
             result = populateVector(listBook);
         } else {
-            JOptionPane.showMessageDialog(frame, "Selecione um modo de pesquisa");
+            JOptionPane.showMessageDialog(frame, "Select a search mode.");
             return;
         }
         tableModel = new DefaultTableModel(result, collumns);

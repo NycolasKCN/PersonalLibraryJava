@@ -30,7 +30,7 @@ public class RegisterBookFrame {
     }
 
     private void configFrame() {
-        frame = new JFrame("Cadastrar livro");
+        frame = new JFrame("New book");
         frame.setIconImage(icon.getImage());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 200);
@@ -40,18 +40,18 @@ public class RegisterBookFrame {
     }
 
     private void configComponents() {
-        titleLabel = new JLabel("Nome: ", JLabel.CENTER);
+        titleLabel = new JLabel("Title: ", JLabel.CENTER);
         titleLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        authorLabel = new JLabel("Autor: ", JLabel.CENTER);
+        authorLabel = new JLabel("Author: ", JLabel.CENTER);
         authorLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        pageLabel = new JLabel("Número de páginas: ", JLabel.CENTER);
+        pageLabel = new JLabel("Pages: ", JLabel.CENTER);
         pageLabel.setFont(new Font("Noto Sans", Font.PLAIN, 14));
 
         titleTF = new JTextField();
         authorTF = new JTextField();
         numPagIn = new JTextField();
 
-        saveBt = new JButton("Salvar");
+        saveBt = new JButton("Add");
         saveBt.addActionListener(e -> {
             String titleBook = titleTF.getText();
             String authorName = authorTF.getText();
@@ -59,19 +59,19 @@ public class RegisterBookFrame {
             try {
                 personalLibrary.getWebService().registerBook(personalLibrary.getLogedUser(), new Book(titleBook, authorName, pages));
             } catch (BookAlreadyExistException ex) {
-                JOptionPane.showMessageDialog(frame, "Livro já está cadastrado!");
+                JOptionPane.showMessageDialog(frame, "Book already registered.");
                 cleanInputs();
                 return;
             } catch (AuthenticationException ex) {
-                JOptionPane.showMessageDialog(frame, "O Usuário não tem permissão para cadastrar o livro.");
+                JOptionPane.showMessageDialog(frame, "The user does not have permission to register the book.");
                 cleanInputs();
                 return;
             }
-            JOptionPane.showMessageDialog(frame, "Livro cadastrado com sucesso!");
+            JOptionPane.showMessageDialog(frame, "Successfully Registered Book!");
             cleanInputs();
             frame.dispose();
         });
-        cancelBt = new JButton("Cancelar");
+        cancelBt = new JButton("Back");
         cancelBt.addActionListener(e -> {
             frame.dispose();
         });

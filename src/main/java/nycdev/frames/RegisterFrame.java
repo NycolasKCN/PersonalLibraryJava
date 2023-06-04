@@ -39,7 +39,7 @@ public class RegisterFrame {
         }
       }
     });
-    frame.setTitle("Creat account");
+    frame.setTitle("Create account");
     frame.setSize(400, 200);
     frame.setResizable(false);
     frame.setLocation(300, 250);
@@ -57,7 +57,7 @@ public class RegisterFrame {
     loginField = new JTextField();
     passwordField = new JPasswordField();
 
-    registerButton = new JButton("Creat account");
+    registerButton = new JButton("Create account");
     registerButton.addActionListener((e) -> {
       String name = nameField.getText();
       String login = loginField.getText();

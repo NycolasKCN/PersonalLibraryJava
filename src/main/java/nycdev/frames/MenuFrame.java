@@ -75,7 +75,7 @@ public class MenuFrame {
 
     JMenuItem exitItem = new JMenuItem("Exit");
     exitItem.addActionListener((e) -> {
-      int resp = JOptionPane.showConfirmDialog(frame, "Are you sure?");
+      int resp = JOptionPane.showConfirmDialog(frame, "Are you sure you want to close?");
       if (resp == JOptionPane.YES_OPTION) {
         System.exit(0);
       }

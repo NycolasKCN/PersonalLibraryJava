@@ -24,10 +24,8 @@ public class RemoveBookFrame {
     JButton removeBt;
     JTable table;
     DefaultTableModel tableModel;
-    String[] columns = {"id", "Título", "Autor", "Número de páginas"};
+    String[] columns = {"id", "Title", "Author", "Pages"};
     List<Book> books;
-
-
     public RemoveBookFrame(JFrame parent, PersonalLibrary personalLibrary) {
         this.parent = parent;
         this.personalLibrary = personalLibrary;
@@ -43,7 +41,7 @@ public class RemoveBookFrame {
     }
 
     public void configFrame() {
-        frame = new JFrame("Apagar livro");
+        frame = new JFrame("Delete book");
         frame.setIconImage(icon.getImage());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(600, 400);
@@ -53,7 +51,7 @@ public class RemoveBookFrame {
     }
 
     public void configComponents() {
-        removeBt = new JButton("Apagar");
+        removeBt = new JButton("Delete");
         removeBt.addActionListener((e) -> {
             Book book = books.get(table.getSelectedRow());
             try {
@@ -64,8 +62,7 @@ public class RemoveBookFrame {
             } catch (BookNotFoundException ex) {
                 JOptionPane.showMessageDialog(frame, "Book not founded.");
             }
-            JOptionPane.showMessageDialog(frame,"Livro removido com sucesso.");
-
+            JOptionPane.showMessageDialog(frame,"Successfully deleted book.");
             updateTable(books);
         });
         table = new JTable();

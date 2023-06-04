@@ -33,7 +33,7 @@ public class PersonalLibrary {
         }
     }
 
-    public void init() {
+    public void showLoginScreen() {
         loginFrame.setVisible(true);
     }
 

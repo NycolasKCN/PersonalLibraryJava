@@ -69,7 +69,7 @@ public class LoginFrame{
                 JOptionPane.showMessageDialog(frame, "Login or password is incorrect.");
             }
         });
-        registerButton = new JButton("Creat account");
+        registerButton = new JButton("Create account");
         registerButton.addActionListener((e) -> {
             personalLibrary.changeToRegister();
         });
