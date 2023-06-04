@@ -92,6 +92,12 @@ public class RegisterFrame {
     frame.add(registerButton);
   }
 
+  private void cleanInputs() {
+    nameField.setText("");
+    loginField.setText("");
+    passwordField.setText("");
+  }
+
   public void setVisible(boolean visible) {
     frame.setVisible(visible);
   }

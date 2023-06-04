@@ -64,6 +64,7 @@ public class LoginFrame{
                 User loggedUser = personalLibrary.getWebService().authenticateUser(login, password);
                 personalLibrary.setLoggedUser(loggedUser);
                 personalLibrary.changeToMenu();
+                cleanInputs();
             } catch (AuthenticationException ex) {
                 JOptionPane.showMessageDialog(frame, "Login or password is incorrect.");
             }
@@ -87,8 +88,17 @@ public class LoginFrame{
         frame.add(loginButton);
     }
 
+    private void cleanInputs() {
+        loginField.setText("");
+        passwordField.setText("");
+    }
+
 
     public void setVisible(boolean b) {
         frame.setVisible(b);
     }
+
+  public JFrame getFrame() {
+        return frame;
+  }
 }

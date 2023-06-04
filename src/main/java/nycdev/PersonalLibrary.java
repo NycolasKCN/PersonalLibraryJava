@@ -6,7 +6,12 @@ import nycdev.frames.RegisterFrame;
 import nycdev.models.User;
 import nycdev.service.WebService;
 
+import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import java.awt.*;
+
 public class PersonalLibrary {
+    private final String lookAndFeel = UIManager.getSystemLookAndFeelClassName();
     private User loggedUser;
     private final WebService webService = new WebService();
     private final MenuFrame menuFrame;
@@ -17,6 +22,15 @@ public class PersonalLibrary {
         menuFrame = new MenuFrame(this);
         loginFrame = new LoginFrame(this);
         registerFrame = new RegisterFrame(this);
+    }
+
+    public void setWhiteMode() {
+        try {
+            UIManager.setLookAndFeel(lookAndFeel);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void init() {
@@ -51,5 +65,10 @@ public class PersonalLibrary {
 
     public WebService getWebService() {
         return webService;
+    }
+
+    public void changeUser() {
+        this.loggedUser = null;
+        changeToLogin();
     }
 }
