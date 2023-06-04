@@ -3,6 +3,7 @@ package nycdev.frames;
 import nycdev.PersonalLibrary;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,9 +18,13 @@ public class MenuFrame {
   RemoveBookFrame removeFrame;
   JMenuBar menuBar = new JMenuBar();
   JLabel title, image;
-  ImageIcon reiImg = new ImageIcon("src/main/resources/assets/rei with books.png");
+  JButton addButton, searchButton, deleteButton;
+  ImageIcon reiImg = new ImageIcon("src/main/resources/assets/book_icon.png");
   ImageIcon icon = new ImageIcon("src/main/resources/assets/2x/outline_library_books_black_48dp.png");
-
+  ImageIcon iconAdd = new ImageIcon("src/main/resources/assets/2x/outline_add_circle_outline_black_48dp.png");
+  ImageIcon iconDelete = new ImageIcon("src/main/resources/assets/2x/outline_delete_black_48dp.png");
+  ImageIcon iconSearch = new ImageIcon("src/main/resources/assets/2x/outline_search_black_48dp.png");
+  ImageIcon backgroundImage = new ImageIcon("src/main/resources/assets/BackGroundPersonalLibrary.png");
   PersonalLibrary personalLibrary;
 
   public MenuFrame(PersonalLibrary personalLibrary) {
@@ -34,7 +39,7 @@ public class MenuFrame {
     JMenu fileMenu = new JMenu("File");
 
     JMenuItem registerBookItem = new JMenuItem("New book");
-    registerBookItem.addActionListener(e -> {
+    registerBookItem.addActionListener((e) -> {
       if (registerFrame == null) {
         registerFrame = new RegisterBookFrame(frame, personalLibrary);
       }
@@ -141,12 +146,61 @@ public class MenuFrame {
     title = new JLabel("Welcome!!", JLabel.CENTER);
     title.setFont(new Font("Noto sans", Font.BOLD, 28));
     image = new JLabel(reiImg, JLabel.CENTER);
+
+    addButton = new JButton(iconAdd);
+    addButton.setText("Add new book");
+    addButton.setFocusPainted(false);
+    addButton.setSize(100, 100);
+    searchButton = new JButton(iconSearch);
+    searchButton.setText("Search an book");
+    searchButton.setFocusPainted(false);
+    searchButton.setSize(100, 100);
+    deleteButton = new JButton(iconDelete);
+    deleteButton.setText("Delete an book");
+    deleteButton.setSize(100, 100);
+    deleteButton.setFocusPainted(false);
+
+
+    addButton.addActionListener((e) -> {
+      if (registerFrame == null) {
+        registerFrame = new RegisterBookFrame(frame, personalLibrary);
+      }
+      registerFrame.setVisible(true);
+    });
+
+    searchButton.addActionListener((e) -> {
+      if (researchFrame == null) {
+        researchFrame = new SearchBookFrame(frame, personalLibrary);
+      }
+      researchFrame.setVisible(true);
+    });
+
+    deleteButton.addActionListener((e) -> {
+      if (removeFrame == null) {
+        removeFrame = new RemoveBookFrame(frame, personalLibrary);
+      }
+      removeFrame.setVisible(true);
+    });
+
   }
 
     private void configLayout() {
+      JPanel topPanel = new JPanel();
+      topPanel.setLayout(new FlowLayout());
+      topPanel.add(image);
+      topPanel.add(title);
+
+      JPanel bottomPanel = new JPanel();
+      bottomPanel.setLayout(new GridLayout(1,3,20, 20));
+      bottomPanel.setBorder(BorderFactory.createEmptyBorder(50  ,20,50,20));
+
+      bottomPanel.add(addButton);
+      bottomPanel.add(searchButton);
+      bottomPanel.add(deleteButton);
+
       frame.setLayout(new GridLayout(2, 1));
-      frame.add(title);
-      frame.add(image);
+      frame.add(topPanel);
+      frame.add(bottomPanel);
     }
 
   public void setVisible(boolean b) {

@@ -78,18 +78,21 @@ public class RegisterFrame {
   }
 
   private void configLayout() {
-    GridLayout layout = new GridLayout(4, 2);
-    frame.setLayout(layout);
-    layout.setVgap(5);
-    layout.setHgap(5);
-    frame.add(nameLabel);
-    frame.add(nameField);
-    frame.add(loginLabel);
-    frame.add(loginField);
-    frame.add(passwordLabel);
-    frame.add(passwordField);
-    frame.add(backButton);
-    frame.add(registerButton);
+    JPanel content = new JPanel();
+    content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+    GridLayout layout = new GridLayout(4, 2, 5, 5);
+    content.setLayout(layout);
+    content.add(nameLabel);
+    content.add(nameField);
+    content.add(loginLabel);
+    content.add(loginField);
+    content.add(passwordLabel);
+    content.add(passwordField);
+    content.add(backButton);
+    content.add(registerButton);
+
+    frame.setContentPane(content);
   }
 
   private void cleanInputs() {

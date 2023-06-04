@@ -8,6 +8,8 @@ import nycdev.service.BookNotFoundException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import static nycdev.Util.configTableModel;
@@ -48,19 +50,32 @@ public class RemoveBookFrame {
     frame.setResizable(false);
     frame.setLocation(getPosition(parent, frame));
     frame.setBackground(Color.lightGray);
+
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowActivated(WindowEvent e) {
+        setBooks();
+        updateTable(books);
+      }
+    });
   }
 
   public void configComponents() {
     removeBt = new JButton("Delete");
     removeBt.addActionListener((e) -> {
-      Book book = books.get(table.getSelectedRow());
       try {
+        Book book = books.get(table.getSelectedRow());
         personalLibrary.getWebService().deleteBook(personalLibrary.getLogedUser(), book);
         books = personalLibrary.getWebService().allBooksUser(personalLibrary.getLogedUser());
       } catch (AuthenticationException ex) {
         JOptionPane.showMessageDialog(frame, "You don't have permission to delete this book.");
+        return;
       } catch (BookNotFoundException ex) {
         JOptionPane.showMessageDialog(frame, "Book not founded.");
+        return;
+      } catch (ArrayIndexOutOfBoundsException ex) {
+        JOptionPane.showMessageDialog(frame, "Select any book.");
+        return;
       }
       JOptionPane.showMessageDialog(frame,"Successfully deleted book.");
       updateTable(books);

@@ -76,16 +76,23 @@ public class LoginFrame{
   }
 
   private void configLayout() {
-    GridLayout frameLayout = new GridLayout(3,2);
+    JPanel content = new JPanel();
+    content.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+    GridLayout frameLayout = new GridLayout(3,2, 5 ,20);
+    content.setLayout(frameLayout);
     frameLayout.setHgap(5);
     frameLayout.setVgap(20);
-    frame.setLayout(frameLayout);
-    frame.add(loginLabel);
-    frame.add(loginField);
-    frame.add(passwordLabel);
-    frame.add(passwordField);
-    frame.add(registerButton);
-    frame.add(loginButton);
+    content.setLayout(frameLayout);
+    content.add(loginLabel);
+    content.add(loginField);
+    content.add(passwordLabel);
+    content.add(passwordField);
+    content.add(registerButton);
+    content.add(loginButton);
+
+    frame.setContentPane(content);
+
+
   }
 
   private void cleanInputs() {
