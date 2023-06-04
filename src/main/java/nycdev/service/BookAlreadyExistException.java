@@ -1,7 +1,7 @@
 package nycdev.service;
 
 public class BookAlreadyExistException extends Exception {
-    public BookAlreadyExistException(String s) {
-        super(s);
-    }
+  public BookAlreadyExistException(String s) {
+    super(s);
+  }
 }
