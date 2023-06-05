@@ -165,7 +165,7 @@ public class WebService {
     }
   }
 
-  public User authenticateUser(String login, String password) throws AuthenticationException {
+  public User authenticateUser(String login, String password) throws AuthenticationException, ConnectionException {
     try {
       URL url = new URL(webService + "token");
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -190,7 +190,7 @@ public class WebService {
       connection.disconnect();
       return user;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new ConnectionException("Could not connect to a webservice.");
     }
   }
 }

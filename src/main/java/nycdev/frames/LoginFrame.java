@@ -3,6 +3,7 @@ package nycdev.frames;
 import nycdev.PersonalLibrary;
 import nycdev.models.User;
 import nycdev.service.AuthenticationException;
+import nycdev.service.ConnectionException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,6 +68,8 @@ public class LoginFrame{
         cleanInputs();
       } catch (AuthenticationException ex) {
         JOptionPane.showMessageDialog(frame, "Login or password is incorrect.");
+      } catch (ConnectionException ex) {
+        JOptionPane.showMessageDialog(frame, "Connection error. Make sure you are connected to the internet");
       }
     });
     registerButton = new JButton("Create account");
