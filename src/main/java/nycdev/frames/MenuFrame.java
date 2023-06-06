@@ -109,6 +109,9 @@ public class MenuFrame {
     JMenu appearanceMenu = new JMenu("Appearance");
     ButtonGroup group = new ButtonGroup();
     JMenuItem darkMode = new JRadioButtonMenuItem("Dark mode");
+    darkMode.addActionListener((e) -> {
+      JOptionPane.showMessageDialog(frame, "Coming soon.");
+    });
     JMenuItem whiteMode = new JRadioButtonMenuItem("White mode");
     whiteMode.setSelected(true);
     group.add(whiteMode);

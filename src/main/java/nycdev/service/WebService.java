@@ -98,12 +98,20 @@ public class WebService {
 
   public List<Book> findBooksByName(User user, String name) {
     try {
-      String urlString = webService + "v1/book/findByName/" + name;
+      String urlString = webService + "v1/book/search";
       URL url = new URL(urlString);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
+      connection.setDoOutput(true);
       connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
       connection.setRequestProperty("Content-Type", "application/json");
+
+      String data = String.format("{\"option\" : %d , \"query\" : \"%s\"}", 1, name);
+
+      byte[] out = data.getBytes(StandardCharsets.UTF_8);
+
+      OutputStream stream = connection.getOutputStream();
+      stream.write(out);
 
       BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       List<Book> listBook = getBookDto(response);
@@ -116,12 +124,20 @@ public class WebService {
 
   public List<Book> findBooksByAuthor(User user, String author) {
     try {
-      String urlString = webService + "v1/book/findByAuthor/" + author;
+      String urlString = webService + "v1/book/search";
       URL url = new URL(urlString);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
+      connection.setDoOutput(true);
       connection.setRequestProperty("Authorization", "Bearer " + user.getToken());
       connection.setRequestProperty("Content-Type", "application/json");
+
+      String data = String.format("{\"option\" : %d , \"query\" : \"%s\"}", 2, author);
+
+      byte[] out = data.getBytes(StandardCharsets.UTF_8);
+
+      OutputStream stream = connection.getOutputStream();
+      stream.write(out);
 
       BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       List<Book> listBook = getBookDto(response);
