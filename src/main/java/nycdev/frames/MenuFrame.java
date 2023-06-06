@@ -1,15 +1,22 @@
 package nycdev.frames;
 
 import nycdev.PersonalLibrary;
+import nycdev.models.Book;
+import nycdev.service.ExportService;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import static nycdev.Util.openUrl;
 
 /**
  * @author Nycolas Kevin
@@ -20,6 +27,7 @@ public class MenuFrame {
   RegisterBookFrame registerFrame;
   SearchBookFrame researchFrame;
   RemoveBookFrame removeFrame;
+  final JFileChooser fileChooser = new JFileChooser();
   JMenuBar menuBar = new JMenuBar();
   JLabel title, image;
   JButton addButton, searchButton, deleteButton;
@@ -29,6 +37,7 @@ public class MenuFrame {
   ImageIcon iconDelete = new ImageIcon("src/main/resources/assets/2x/outline_delete_black_48dp.png");
   ImageIcon iconSearch = new ImageIcon("src/main/resources/assets/2x/outline_search_black_48dp.png");
   PersonalLibrary personalLibrary;
+  ExportService exportService = new ExportService();
 
   public MenuFrame(PersonalLibrary personalLibrary) {
     this.personalLibrary = personalLibrary;
@@ -77,7 +86,17 @@ public class MenuFrame {
 
     JMenuItem toCsv = new JMenuItem("Books to csv");
     toCsv.addActionListener((e) -> {
-      // TODO: 04/06/2023
+      int opc = fileChooser.showSaveDialog(frame);
+      if(opc == JFileChooser.APPROVE_OPTION) {
+        List<Book> books = personalLibrary.getWebService().allBooksUser(personalLibrary.getLogedUser());
+        try {
+          exportService.exportToCsv(fileChooser.getSelectedFile(), books);
+          JOptionPane.showMessageDialog(frame, "File saved successfully.");
+        } catch (IOException ex) {
+          System.err.println(ex.getMessage());
+          JOptionPane.showMessageDialog(frame, "An unexpected error has occurred.");
+        }
+      }
     });
     exportItem.add(toCsv);
 
@@ -120,7 +139,21 @@ public class MenuFrame {
     JMenu helpMenu = new JMenu("Help");
 
     JMenuItem helpItem = new JMenuItem("Help");
+    helpItem.addActionListener((e) -> {
+      try {
+        openUrl("https://github.com/NycolasKCN/PersonalLibrary/issues");
+      } catch (URISyntaxException ex) {
+        JOptionPane.showMessageDialog(frame, "An unexpected error has occurred.");
+      }
+    });
     JMenuItem aboutItem = new JMenuItem("About");
+    aboutItem.addActionListener((e) -> {
+      try {
+        openUrl("https://github.com/NycolasKCN/PersonalLibrary/blob/master/README.md");
+      } catch (URISyntaxException ex) {
+        JOptionPane.showMessageDialog(frame, "An unexpected error has occurred.");
+      }
+    });
 
     helpMenu.add(helpItem);
     helpMenu.add(aboutItem);
@@ -152,6 +185,10 @@ public class MenuFrame {
 
 
   private void configComponents() {
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    fileChooser.setDialogTitle("Save");
+
     title = new JLabel("Welcome!!", JLabel.CENTER);
     title.setFont(new Font("Noto sans", Font.BOLD, 28));
     image = new JLabel(titleImg, JLabel.CENTER);

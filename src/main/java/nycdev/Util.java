@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class Util {
@@ -61,5 +63,17 @@ public class Util {
       }
     }
     return r;
+  }
+
+  public static void openUrl(String url) throws URISyntaxException{
+    if (Desktop.isDesktopSupported()) {
+      Desktop desktop = Desktop.getDesktop();
+      try {
+        URI uri = new URI(url);
+        desktop.browse(uri);
+      } catch (IOException e) {
+        System.err.println(e.getMessage());
+      }
+    }
   }
 }
