@@ -18,10 +18,10 @@ public class ExportService {
 
   private void writeFile(File file, List<Book> books) throws IOException {
     FileWriter w = new FileWriter(file);
-    w.write("id,title,author,pages\n");
+    w.write("title;author;pages\n");
 
     for(Book b : books) {
-      String line = String.format("%s,%s,%s,%s\n", b.getId(),b.getName(),b.getAuthor(),b.getPages());
+      String line = String.format("%s;%s;%s\n",b.getName(),b.getAuthor(),b.getPages());
       w.write(line);
     }
 
